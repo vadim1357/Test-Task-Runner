@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Cubes : MonoBehaviour
 {
    [SerializeField] private Rigidbody rb;
-    public Text test;
+    
    
 
  

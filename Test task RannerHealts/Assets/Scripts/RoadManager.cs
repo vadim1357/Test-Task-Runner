@@ -20,12 +20,15 @@ public class RoadManager : MonoBehaviour
     private float T = 1;
     public Text GameOver;
     public Button start;
+    public int health = 30;
+    public Text healths;
 
 
 
 
     void Start()
     {
+        ShowHealths();
         for(int i =0; i <3; i++)
         {
             positions[i] = new Vector3(positionX, 1,110);
@@ -39,8 +42,9 @@ public class RoadManager : MonoBehaviour
     
     void Update()
     {
+        
 
-        if(curSpeed == 0)
+        if (curSpeed == 0)
         {
             return;
         }
@@ -73,8 +77,13 @@ public class RoadManager : MonoBehaviour
                 T -= 0.05f;
             }
         }
+        if(health<= 0)
+        {
+            health = 0;
+            ShowHealths();
+            RestartLevel();
+        }
         
-
     }
     public void RestartLevel()
     {
@@ -117,8 +126,8 @@ public class RoadManager : MonoBehaviour
         curSpeed = speed;
         StartCoroutine(SpawnCubes());
         StartCoroutine(Distance());
-
-
+        StartCoroutine(_LossOfHealth());
+        health = 30;
         
         SwipeManager.instance.enabled = true;
         
@@ -129,7 +138,7 @@ public class RoadManager : MonoBehaviour
         {
             
             distance.text = dis.ToString();
-            dis += 1;
+            dis ++;
             yield return new WaitForSeconds(T);
         }
         
@@ -146,5 +155,23 @@ public class RoadManager : MonoBehaviour
             allCubes.Add(newCube2);
             yield return new WaitForSeconds(T);
         }
+    }
+    IEnumerator _LossOfHealth()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+            LossOfHealth();
+            ShowHealths();
+        }
+        
+    }
+    public void LossOfHealth()
+    {
+        health--;
+    }
+    public void ShowHealths()
+    {
+        healths.text = "healths - "+health.ToString();
     }
 }

@@ -6,8 +6,8 @@ public class SwipeManager : MonoBehaviour
 {
     public static SwipeManager instance;
 
-    public enum Direction { Left, Right};
-    private bool[] swipe = new bool[2];
+    public enum Direction { Left, Right, Up, Down};
+    private bool[] swipe = new bool[4];
 
     private Vector2 startTouch;
     private bool touchMoved;
@@ -70,7 +70,12 @@ public class SwipeManager : MonoBehaviour
                 swipe[(int)Direction.Left] = swipeDelta.x < 0;
                 swipe[(int)Direction.Right] = swipeDelta.x > 0;
             }
-           
+            if (Mathf.Abs(swipeDelta.x) < Mathf.Abs(swipeDelta.y)) // свайп up или down
+            {
+                swipe[(int)Direction.Down] = swipeDelta.y < 0;
+                swipe[(int)Direction.Up] = swipeDelta.y > 0;
+            }
+
             SendSwipe();
         }
         
@@ -78,7 +83,7 @@ public class SwipeManager : MonoBehaviour
     }
     private void SendSwipe()
     {
-        if(swipe[0] || swipe[1] )
+        if(swipe[0] || swipe[1] || swipe[2] || swipe[3])
         {
            
             if(MoveEvent != null)
@@ -92,6 +97,14 @@ public class SwipeManager : MonoBehaviour
             else if (swipe[0])
             {
                 Player.MoveLeft();
+            }
+            else if (swipe[2])
+            {
+                RoadManager.curSpeed += 10;
+            }
+            else if (swipe[3])
+            {
+                RoadManager.curSpeed -= 10;
             }
         }
         else
